@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telemed Prijava</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="d-flex justify-content-center align-items-center bg-light vh-100">
+    <div class="container">
+        <div class="mx-auto bg-white p-4 p-md-5 rounded shadow" style="max-width: 400px;">
+            <h1 class="display-5 fw-bold text-danger mb-3 d-flex align-items-center justify-content-center">
+                <img src="heart.jpg" width="50" height="50" class="me-2">
+                TELEMED
+            </h1>
+            <h2 class="mb-3 text-center">Prijavi se</h2>
+            <p class="text-muted mb-4 text-center">Unesi podatke za prijavu</p>
+
+            <form id="login-form">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Unesi email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Lozinka</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                            <i class="bi bi-eye" id="toggleIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Prijavi se</button>
+            </form>
+
+            <p class="text-danger mt-3 d-none" id="error-message">Neispravni podaci za prijavu!</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('bi-eye');
+                toggleIcon.classList.add('bi-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('bi-eye-slash');
+                toggleIcon.classList.add('bi-eye');
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            const doktorEmail = 'doktor@telemed.hr';
+            const doktorPassword = 'doktor';
+
+            if (email === doktorEmail && password === doktorPassword) {
+                window.location.href = 'patientList.html';
+                return;
+            }
+
+            let pacijenti = JSON.parse(localStorage.getItem('pacijenti')) || [];
+
+            const pacijent = pacijenti.find(p => p.email === email && p.lozinka === password);
+
+            if (pacijent) {
+                localStorage.setItem('loggedInPatientEmail', pacijent.email);
+                window.location.href = 'formPacijent.html';
+            } else {
+                errorMessage.classList.remove('d-none');
+                errorMessage.textContent = 'Neispravni podaci za prijavu!';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Podaci o Pacijentu</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid bg-light py-2">
+  <div class="row">
+    <div class="col-md-12 text-end">
+      <strong>Doktor:</strong> <span id="doctorName">Dr. Ime Prezime</span>
+    </div>
+  </div>
+</div>
+
+
+    
+    <div class="collapse d-lg-none" id="sidebarMenu">
+      <div class="bg-light p-3 mb-4">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Početna</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="patientList.html">Popis pacijenata</a>
+          </li>
+        </ul>
+        <a href="login.html" class="btn btn-outline-danger w-100">Odjavi se</a>
+      </div>
+    </div>
+    
+  <div class="container mt-5">
+    <h3 class="mb-4">Podaci o Pacijentu</h3>
+    <div id="patientDetails" class="card p-4">
+      <p><strong>Ime i prezime:</strong> <span id="patientName"></span></p>
+      <p><strong>Email:</strong> <span id="patientEmail"></span></p>
+      <p><strong>Telefon:</strong> <span id="patientPhone"></span></p>
+      <p><strong>Adresa:</strong> <span id="patientAddress"></span></p>
+      <p><strong>Grad:</strong> <span id="patientCity"></span></p>
+    </div>
+
+    <h4 class="mt-4">Povijest Tlakova</h4>
+    <table class="table table-striped mt-3">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Datum i vrijeme</th>
+          <th>Tlak i otkucaji</th>
+          <th>Opis</th>
+        </tr>
+      </thead>
+      <tbody id="pressureTable"></tbody>
+    </table>
+
+    <a href="patientList.html" class="btn btn-secondary mt-3">Natrag na popis pacijenata</a>
+  </div>
+<footer class="bg-dark text-white text-center py-3 mt-auto">
+  <p class="mb-0">&copy; 2024 TELEMED. Sva prava pridržana.</p>
+</footer>
+</body>
+</html>
