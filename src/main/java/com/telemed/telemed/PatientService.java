@@ -1,6 +1,10 @@
 package com.telemed.telemed;
 
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +16,7 @@ public class PatientService {
 
     public List<PatientRecord> getAllRecords() {
         if (!initialized) {
-            initializeRecords();
+            initializeRecords(); // Pozivanje metode
             initialized = true; // Oznaka da su podaci inicijalizirani
         }
         return records;
@@ -20,16 +24,15 @@ public class PatientService {
 
     private void initializeRecords() {
         // Dodavanje hardkodiranih podataka samo jednom
-        records.add(new PatientRecord("22.12.2024 12:00", "120/80, 70", "Normalan tlak"));
-        records.add(new PatientRecord("21.12.2024 18:00", "140/90, 80", "Lagano povišen tlak"));
-        records.add(new PatientRecord("21.12.2024 18:00", "140/90, 80", "Lagano povišen tlak"));
-        records.add(new PatientRecord("22.12.2024 12:00", "120/80, 70", "Normalan tlak"));
-
+        records.add(new PatientRecord("22.12.2024 12:00", 120, 80, 70, "Normalan tlak"));
+        records.add(new PatientRecord("21.12.2024 18:00", 140, 90, 80, "Lagano povišen tlak"));
+        records.add(new PatientRecord("20.12.2024 16:00", 130, 85, 75, "Normalan tlak"));
     }
 
     public void addRecord(PatientRecord record) {
         records.add(record);
     }
+
     public PatientRecord getRecordById(int id) {
         return records.stream()
                 .filter(record -> record.getId() == id)
@@ -37,18 +40,21 @@ public class PatientService {
                 .orElse(null);
     }
 
-    public boolean updateRecord(int id, String datum, String tlak, String opis) {
-        PatientRecord record = getRecordById(id);
-        if (record != null) {
-            if (tlak != null) record.setTlak(tlak);
-            if (opis != null) record.setOpis(opis);
-            return true;
-        }
-        return false;
-    }
-
 
     public boolean deleteRecord(int id) {
         return records.removeIf(record -> record.getId() == id);
     }
+
+    @GetMapping("/editRecord")
+    public String editRecord(@RequestParam int id, Model model) {
+        PatientService patientService = null;
+        PatientRecord record = patientService.getRecordById(id);
+        if (record != null) {
+            model.addAttribute("record", record);
+            return "editRecord";
+        } else {
+            return "error"; // Prikaz stranice za grešku
+        }
+    }
+
 }

@@ -13,9 +13,20 @@
       <span class="navbar-toggler-icon"></span>
     </button>
   </div>
-  <div class="text-end">
-    <strong>Pacijent: Goran Bulat</strong> <span th:text="${patientName}">Ime Prezime</span>
+  <div class="container-fluid bg-light py-2">
+    <div class="row justify-content-end">
+      <div class="col-auto text-end">
+        <div>
+          <strong>Pacijent:</strong> <span th:text="${patientName}">Goran Bulat</span>
+        </div>
+        <a th:href="@{/login}" class="btn btn-outline-danger mt-2 d-none d-lg-inline-flex align-items-center">
+          <i th:href="@{/login}" class="bi bi-box-arrow-right me-2"></i> Odjavi se
+        </a>
+      </div>
+    </div>
   </div>
+
+
 </div>
 
 <!-- Navbar za mobilne uređaje -->
@@ -60,7 +71,6 @@
         <a class="nav-link" th:href="@{/patientDetails}">Pogledaj prošle zapise</a>
       </li>
     </ul>
-    <a th:href="@{/login}" class="btn btn-outline-danger mt-auto">Odjavi se</a>
   </div>
 
   <!-- Glavni sadržaj -->

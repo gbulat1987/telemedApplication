@@ -24,30 +24,25 @@ public class PatientController {
 
     @PostMapping("/formPatient")
     public String saveRecord(
-            @RequestParam(required = true) String sistolickiTlak,
-            @RequestParam(required = true) String dijastolickiTlak,
-            @RequestParam(required = true) String otkucajiSrca,
+            @RequestParam int sistolickiTlak,
+            @RequestParam int dijastolickiTlak,
+            @RequestParam int otkucajiSrca,
             @RequestParam(required = false) String opis) {
         try {
-            int sistolic = Integer.parseInt(sistolickiTlak);
-            int diastolic = Integer.parseInt(dijastolickiTlak);
-            int heartRate = Integer.parseInt(otkucajiSrca);
-
-            if (sistolic <= 0 || diastolic <= 0 || heartRate <= 0) {
+            if (sistolickiTlak <= 0 || dijastolickiTlak <= 0 || otkucajiSrca <= 0) {
                 throw new IllegalArgumentException("Vrijednosti moraju biti pozitivne!");
             }
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
             String datum = LocalDateTime.now().format(formatter);
-            String tlak = sistolickiTlak + "/" + dijastolickiTlak + ", " + otkucajiSrca;
 
-            PatientRecord record = new PatientRecord(datum, tlak, opis);
+            PatientRecord record = new PatientRecord(datum, sistolickiTlak, dijastolickiTlak, otkucajiSrca, opis);
             patientService.addRecord(record);
 
             return "redirect:/patientDetails";
         } catch (Exception e) {
             e.printStackTrace();
-            return "error"; // Prikaz posebne stranice s pogreškom
+            return "error";
         }
     }
 
@@ -58,24 +53,12 @@ public class PatientController {
         model.addAttribute("editableId", null); // Osigurajte da je postavljen na početku
         return "patientDetails";
     }
-
-
     @GetMapping("/editRecord")
     public String editRecord(@RequestParam int id, Model model) {
-        model.addAttribute("editableId", id); // Postavljanje zapisa za uređivanje
-        model.addAttribute("records", patientService.getAllRecords());
-        model.addAttribute("patientName", "Goran Bulat"); // Osigurajte da se ime pacijenta prosljeđuje
-        return "patientDetails";
-    }
-
-    @PostMapping("/updateRecord")
-    public String updateRecord(
-            @RequestParam int id,
-            @RequestParam String tlak,
-            @RequestParam String opis) {
-        boolean updated = patientService.updateRecord(id, null, tlak, opis); // Datum ostaje nepromijenjen
-        if (updated) {
-            return "redirect:/patientDetails"; // Vraća na stranicu s listom zapisa
+        PatientRecord record = patientService.getRecordById(id);
+        if (record != null) {
+            model.addAttribute("record", record);
+            return "editRecord";
         } else {
             return "error";
         }
@@ -91,4 +74,23 @@ public class PatientController {
             return "error";
         }
     }
+    @PostMapping("/updateRecord")
+    public String updateRecord(
+            @RequestParam int id,
+            @RequestParam int sistolicki,
+            @RequestParam int dijastolicki,
+            @RequestParam int otkucaji,
+            @RequestParam String opis) {
+        PatientRecord record = patientService.getRecordById(id);
+        if (record != null) {
+            record.setSistolickiTlak(sistolicki);
+            record.setDijastolickiTlak(dijastolicki);
+            record.setOtkucajiSrca(otkucaji);
+            record.setOpis(opis);
+            return "redirect:/patientDetails";
+        } else {
+            return "error";
+        }
+    }
+
 }
