@@ -1,26 +1,45 @@
-package com.telemed.telemed;
+package com.telemed.telemed.controller.model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class PatientRecord {
-    private static int counter = 0;
-    private final int id;
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String datum;
     private int sistolickiTlak;
     private int dijastolickiTlak;
     private int otkucajiSrca;
     private String opis;
 
+    public Long getAppUserId() {
+        return appUserId;
+    }
+
+    public void setAppUserId(Long appUserId) {
+        this.appUserId = appUserId;
+    }
+
+    @Column(name = "app_user_id")
+    private Long appUserId;
+
     public PatientRecord(String datum, int sistolickiTlak, int dijastolickiTlak, int otkucajiSrca, String opis) {
-        this.id = ++counter;
         this.datum = datum;
         this.sistolickiTlak = sistolickiTlak;
         this.dijastolickiTlak = dijastolickiTlak;
         this.otkucajiSrca = otkucajiSrca;
         this.opis = opis;
     }
+    public PatientRecord() {
+        // Default constructor required by Hibernate
+    }
 
 
     public int getId() {
-        return id;
+        return Math.toIntExact(id);
     }
 
     public String getDatum() {
