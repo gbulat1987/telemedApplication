@@ -26,7 +26,7 @@ public class PatientController {
     public String showFormPatient(HttpSession session, Model model) {
         AppUser user = (AppUser) session.getAttribute("user");
         if (user == null) {
-            return "redirect:/login"; // Ako korisnik nije prijavljen, preusmjerite ga na login
+            return "redirect:/login";
         }
         model.addAttribute("userName", user.getIme() + " " + user.getPrezime());
         return "formPatient";
@@ -41,7 +41,7 @@ public class PatientController {
                              @RequestParam(required = false) String opis) {
         AppUser user = (AppUser) session.getAttribute("user"); // Dohvaćanje trenutno prijavljenog korisnika
         if (user == null || !user.isPatient()) {
-            return "redirect:/login"; // Ako korisnik nije prijavljen, preusmjeri na login
+            return "redirect:/login";
         }
 
         try {
