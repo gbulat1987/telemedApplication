@@ -72,7 +72,7 @@ public class DoctorController {
     }
     @GetMapping("/addPatient")
     public String showAddPatientForm() {
-        return "addPatient"; // Vraća HTML stranicu addPatient.html
+        return "addPatient";
     }
 
 }
