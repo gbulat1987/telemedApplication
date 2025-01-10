@@ -29,7 +29,8 @@
         <a class="nav-link active" href="#">Popis pacijenata</a>
       </li>
     </ul>
-    <a href="login.html" class="btn btn-outline-danger w-100">Odjavi se</a>
+    <a th:href="@{/addPatient}" class="btn btn-primary w-100 mb-2">+ Dodaj novog pacijenta</a>
+    <a th:href="@{/login}" class="btn btn-outline-danger w-100">Odjavi se</a>
   </div>
 </div>
 
@@ -37,7 +38,7 @@
   <!-- Sidebar for Desktop -->
   <div class="d-none d-lg-flex flex-column bg-light p-3 vh-100" style="width: 250px;">
     <a class="navbar-brand text-danger fw-bold mb-4 d-flex align-items-center" href="#">
-      <img src="heart.jpg" width="40" height="40" class="me-2d-block">
+      <img src="heart.jpg" width="40" height="40" class="me-2 d-block">
       TELEMED
     </a>
     <ul class="nav flex-column mb-auto">
@@ -49,34 +50,76 @@
 
   <!-- Main content -->
   <div class="container-fluid p-4">
-    <div class="d-flex flex-column align-items-end mb-3 d-none d-lg-flex">
-      <a th:href="@{/addPatient}" class="btn btn-primary mb-2">+ Dodaj novog pacijenta</a>
+    <div class="mb-2 d-none d-lg-flex justify-content-end">
+      <p th:if="${session.user != null}">
+        Doktor: <span th:text="${session.user.ime}"></span> <span th:text="${session.user.prezime}"></span>
+      </p>
+      <p th:unless="${session.user != null}">
+        Korisnik nije prijavljen.
+      </p>
+    </div>
+    <div class="d-flex justify-content-end align-items-center mb-3 d-none d-lg-flex">
+      <a th:href="@{/addPatient}" class="btn btn-primary me-2">+ Dodaj novog pacijenta</a>
       <a th:href="@{/login}" class="btn btn-outline-danger">Odjavi se</a>
-
     </div>
     <div class="d-flex justify-content-between align-items-center mb-3 d-lg-none">
-      <input type="text" id="searchInput" class="form-control w-50" placeholder="Pretraži pacijente">
     </div>
 
     <!-- Desktop View (Table) -->
     <div class="d-none d-lg-block table-responsive">
       <table class="table table-striped table-bordered">
         <thead>
-        <tr>
-          <th>Ime</th>
-          <th>Zadnje stanje</th>
-          <th>Email adresa</th>
-        </tr>
+        <tbody>
+      <tr>
+        <th>Ime i Prezime</th>
+        <th>Zadnje stanje</th>
+        <th>Opis</th>
+        </tbody>
+
         </thead>
         <tbody id="patientTable">
-        <!-- Dinamički sadržaj -->
+        <tr th:each="patient : ${patients}">
+          <td th:text="${patient.ime} + ' ' + ${patient.prezime}">Ime i Prezime</td>
+          <td>
+      <span th:if="${patient.lastRecord != null}"
+            th:text="${patient.lastRecord.sistolickiTlak + '/' + patient.lastRecord.dijastolickiTlak + ' (' + patient.lastRecord.otkucajiSrca + ' otkucaja)'}"></span>
+            <span th:if="${patient.lastRecord == null}">Nema podataka</span>
+          </td>
+          <td>
+            <span th:if="${patient.lastRecord != null}" th:text="${patient.lastRecord.opis}"></span>
+            <span th:if="${patient.lastRecord == null}">Nema opisa</span>
+          </td>
+          <td>
+            <a th:href="@{/patientRecords(patientId=${patient.id})}" class="btn btn-primary">Prikaži</a>
+          </td>
+        </tr>
         </tbody>
+
+
       </table>
     </div>
 
     <!-- Mobile View (Cards) -->
     <div class="d-lg-none" id="patientCards">
-      <!-- Dinamički sadržaj -->
+      <div class="card mb-3" th:each="patient : ${patients}">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${patient.ime} + ' ' + ${patient.prezime}"></h5>
+          <p class="card-text">
+            <strong>Zadnje stanje:</strong>
+            <span th:if="${patient.lastRecord != null}"
+                  th:text="${patient.lastRecord.sistolickiTlak + '/' + patient.lastRecord.dijastolickiTlak + ' (' + patient.lastRecord.otkucajiSrca + ' otkucaja)'}"></span>
+            <span th:if="${patient.lastRecord == null}">Nema podataka</span><br>
+            <strong>Opis:</strong>
+            <span th:if="${patient.lastRecord != null}" th:text="${patient.lastRecord.opis}"></span>
+            <span th:if="${patient.lastRecord == null}">Nema opisa</span>
+          </p>
+          <a th:href="@{/patientRecords(patientId=${patient.id})}" class="btn btn-primary">Prikaži</a>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Dinamički sadržaj -->
     </div>
   </div>
 </div>

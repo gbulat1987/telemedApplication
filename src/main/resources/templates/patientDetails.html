@@ -16,7 +16,13 @@
     </button>
     <!-- Pacijent i Odjavi se (desni kut) -->
     <div class="text-end d-none d-lg-flex flex-column">
-        <div><strong>Pacijent:</strong> <span th:text="${patientName}">Ime Prezime</span></div>
+        <p th:if="${session.user != null}">
+            Pacijent: <span th:text="${session.user.ime}"></span> <span th:text="${session.user.prezime}"></span>
+        </p>
+        <p th:unless="${session.user != null}">
+            Korisnik nije prijavljen.
+        </p>
+
         <a th:href="@{/login}" class="btn btn-outline-danger mt-2">Odjavi se</a>
     </div>
 </div>

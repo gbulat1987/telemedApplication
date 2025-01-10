@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hr">
+<html lang="hr" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,27 +34,36 @@
   <div class="container mt-5">
     <h3 class="mb-4">Podaci o Pacijentu</h3>
     <div id="patientDetails" class="card p-4">
-      <p><strong>Ime i prezime:</strong> <span id="patientName"></span></p>
-      <p><strong>Email:</strong> <span id="patientEmail"></span></p>
-      <p><strong>Telefon:</strong> <span id="patientPhone"></span></p>
-      <p><strong>Adresa:</strong> <span id="patientAddress"></span></p>
-      <p><strong>Grad:</strong> <span id="patientCity"></span></p>
+      <p><strong>Ime i prezime:</strong> <span th:text="${patient.ime} + ' ' + ${patient.prezime}"></span></p>
+      <p><strong>Email:</strong> <span th:text="${patient.email}"></span></p>
+      <p><strong>Telefon:</strong> <span th:text="${patient.telefon}"></span></p>
+      <p><strong>Adresa:</strong> <span th:text="${patient.adresa}"></span></p>
+      <p><strong>Grad:</strong> <span th:text="${patient.grad}"></span></p>
     </div>
 
     <h4 class="mt-4">Povijest Tlakova</h4>
     <table class="table table-striped mt-3">
       <thead>
-        <tr>
-          <th>#</th>
-          <th>Datum i vrijeme</th>
-          <th>Tlak i otkucaji</th>
-          <th>Opis</th>
-        </tr>
+      <tr>
+        <th>#</th>
+        <th>Datum i vrijeme</th>
+        <th>Tlak i otkucaji</th>
+        <th>Opis</th>
+      </tr>
       </thead>
-      <tbody id="pressureTable"></tbody>
+      <tbody>
+      <tr th:each="record, iterStat : ${records}">
+        <td th:text="${iterStat.count}"></td>
+        <td th:text="${record.datum}"></td>
+        <td th:text="${record.sistolickiTlak + '/' + record.dijastolickiTlak + ' (' + record.otkucajiSrca + ')'}"></td>
+        <td th:text="${record.opis}"></td>
+      </tr>
+      </tbody>
     </table>
 
-    <a href="patientList.html" class="btn btn-secondary mt-3">Natrag na popis pacijenata</a>
+    </table>
+
+    <a th:href="@{/patientList}" class="btn btn-secondary mt-3">Natrag na popis pacijenata</a>
   </div>
 <footer class="bg-dark text-white text-center py-3 mt-auto">
   <p class="mb-0">&copy; 2024 TELEMED. Sva prava pridržana.</p>

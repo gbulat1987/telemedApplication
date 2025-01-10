@@ -11,9 +11,15 @@
 <div class="container-fluid bg-light py-2">
   <div class="row justify-content-end">
     <div class="col-auto text-end">
-      <strong>Doktor:</strong> <span id="doctorName">Dr. Ime Prezime</span>
+      <p th:if="${session.user != null}">
+        Doktor: <span th:text="${session.user.ime}"></span> <span th:text="${session.user.prezime}"></span>
+      </p>
+      <p th:unless="${session.user != null}">
+        Korisnik nije prijavljen.
+      </p>
+
       <br>
-      <a href="login.html" class="btn btn-outline-danger mt-2 d-none d-lg-inline-flex align-items-center">
+      <a th:href="@{/login}" class="btn btn-outline-danger mt-2 d-none d-lg-inline-flex align-items-center">
         <i class="bi bi-box-arrow-right me-2"></i> Odjavi se
       </a>
     </div>
@@ -64,42 +70,43 @@
               <a class="nav-link active" href="#">Dodavanje novog pacijenta</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="patientList.html">Natrag</a>
+              <a class="nav-link"  th:href="@{/patientList}">Natrag</a>
             </li>
           </ul>
-          <a href="login.html" class="btn btn-outline-danger w-100 mt-2">Odjavi se</a>
+          <a th:href="@{/login}" class="btn btn-outline-danger w-100 mt-2">Odjavi se</a>
         </div>
       </div>
 
       <h3 class="mb-4">Dodavanje novog pacijenta</h3>
-      <form>
+
+      <form th:action="@{/addPatient}" method="post">
         <div class="mb-3">
           <label for="ime" class="form-label">Ime:</label>
-          <input type="text" class="form-control" id="ime" required>
+          <input type="text" class="form-control" id="ime" name="ime" required>
         </div>
         <div class="mb-3">
           <label for="prezime" class="form-label">Prezime:</label>
-          <input type="text" class="form-control" id="prezime" required>
+          <input type="text" class="form-control" id="prezime" name="prezime" required>
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">Email:</label>
-          <input type="email" class="form-control" id="email" required>
+          <input type="email" class="form-control" id="email" name="email" required>
         </div>
         <div class="mb-3">
           <label for="telefon" class="form-label">Telefon:</label>
-          <input type="text" class="form-control" id="telefon" required>
+          <input type="text" class="form-control" id="telefon" name="telefon" required>
         </div>
         <div class="mb-3">
           <label for="adresa" class="form-label">Adresa:</label>
-          <input type="text" class="form-control" id="adresa">
+          <input type="text" class="form-control" id="adresa" name="adresa" required>
         </div>
         <div class="mb-3">
           <label for="grad" class="form-label">Grad:</label>
-          <input type="text" class="form-control" id="grad">
+          <input type="text" class="form-control" id="grad" name="grad" required>
         </div>
         <div class="mb-3">
           <label for="lozinka" class="form-label">Lozinka:</label>
-          <input type="password" class="form-control" id="lozinka" required>
+          <input type="password" class="form-control" id="lozinka" name="lozinka" required>
         </div>
         <button type="submit" class="btn btn-primary w-100">Dodaj novog pacijenta</button>
       </form>

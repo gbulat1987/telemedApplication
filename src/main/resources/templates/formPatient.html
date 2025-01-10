@@ -17,7 +17,16 @@
     <div class="row justify-content-end">
       <div class="col-auto text-end">
         <div>
-          <strong>Pacijent:</strong> <span th:text="${patientName}">Goran Bulat</span>
+
+          <p th:if="${session.user != null}">
+            Pacijent: <span th:text="${session.user.ime}"></span> <span th:text="${session.user.prezime}"></span>
+          </p>
+          <p th:unless="${session.user != null}">
+            Korisnik nije prijavljen.
+          </p>
+
+
+
         </div>
         <a th:href="@{/login}" class="btn btn-outline-danger mt-2 d-none d-lg-inline-flex align-items-center">
           <i th:href="@{/login}" class="bi bi-box-arrow-right me-2"></i> Odjavi se
