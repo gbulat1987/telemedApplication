@@ -66,7 +66,7 @@ public class DoctorController {
         newPatient.setGrad(grad);
         newPatient.setPassword(lozinka);
         newPatient.setUserTypeId(2); // Postavi korisnika kao pacijenta
-        newPatient.setDoctorId(doctor.getId()); // Poveži pacijenta s doktorom
+        newPatient.setDoctorId((int) doctor.getId().longValue()); // Poveži pacijenta s doktorom
 
         patientService.addUser(newPatient); // Spremi pacijenta
         return "redirect:/patientList";
@@ -84,7 +84,7 @@ public class DoctorController {
 
         AppUser patient = patientService.getUserById(patientId);
         if (patient != null && patient.isPatient()) {
-            patient.setDoctorId(doctor.getId()); // Poveži pacijenta s doktorom
+            patient.setDoctorId((int) doctor.getId().longValue()); // Poveži pacijenta s doktorom
             patientService.addUser(patient); // Ažuriraj pacijenta
         }
 

@@ -49,8 +49,8 @@ public class AppUser {
         return userTypeId != null && userTypeId == 2;
     }
 
-    public Integer getId() {
-        return Math.toIntExact(id);
+    public Long getId() {
+        return (long) Math.toIntExact(id);
     }
 
     public String getIme() {
