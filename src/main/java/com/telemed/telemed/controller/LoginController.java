@@ -1,8 +1,8 @@
-package com.telemed.telemed.controller.controller;
+package com.telemed.telemed.controller;
 
 import jakarta.servlet.http.HttpSession;
-import com.telemed.telemed.controller.model.AppUser;
-import com.telemed.telemed.controller.model.AppUserRepository;
+import com.telemed.telemed.model.AppUser;
+import com.telemed.telemed.model.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,4 +62,36 @@ public class LoginController {
         session.invalidate();
         return "redirect:/login";
     }
+
+    @PostMapping("/addPatientFromLogin")
+    public String registerPatientFromLogin(@RequestParam String ime,
+                                           @RequestParam String prezime,
+                                           @RequestParam String email,
+                                           @RequestParam String telefon,
+                                           @RequestParam String adresa,
+                                           @RequestParam String grad,
+                                           @RequestParam String lozinka) {
+        // Kreiranje novog korisnika
+        AppUser newUser = new AppUser();
+        newUser.setIme(ime);
+        newUser.setPrezime(prezime);
+        newUser.setEmail(email);
+        newUser.setTelefon(telefon);
+        newUser.setAdresa(adresa);
+        newUser.setGrad(grad);
+        newUser.setPassword(lozinka);
+        newUser.setUserTypeId(2); // Označiti korisnika kao pacijenta
+
+        // Spremanje korisnika
+        appUserRepository.save(newUser);
+
+        // Preusmjeravanje na login
+        return "redirect:/login";
+    }
+    @GetMapping("/addPatientFromLogin")
+    public String showRegistrationForm() {
+        return "addPatientFromLogin"; // Prikazuje istu HTML stranicu
+    }
+
+
 }

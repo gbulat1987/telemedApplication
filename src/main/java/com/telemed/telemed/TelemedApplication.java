@@ -1,4 +1,4 @@
-package com.telemed.telemed.controller;
+package com.telemed.telemed;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

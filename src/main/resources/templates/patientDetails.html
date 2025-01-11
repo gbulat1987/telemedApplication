@@ -71,46 +71,73 @@
             </li>
         </ul>
     </div>
-
-    <!-- Glavni dio stranice -->
     <div class="container-fluid p-4">
         <h3 class="mb-4">Pregled zapisa</h3>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Datum</th>
-                <th>Sistolički tlak</th>
-                <th>Dijastolički tlak</th>
-                <th>Otkucaji srca</th>
-                <th>Opis</th>
-                <th>Akcije</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="record : ${records}">
-                <td th:text="${record.id}"></td>
-                <td th:text="${record.datum}"></td>
-                <td th:text="${record.sistolickiTlak}"></td>
-                <td th:text="${record.dijastolickiTlak}"></td>
-                <td th:text="${record.otkucajiSrca}"></td>
-                <td th:text="${record.opis}"></td>
-                <td>
-                    <a th:href="@{/editRecord(id=${record.id})}" class="btn btn-secondary btn-sm">Uredi</a>
-                    <form th:action="@{/deleteRecord}" method="post" style="display:inline;">
-                        <input type="hidden" name="id" th:value="${record.id}">
-                        <button type="submit" class="btn btn-light btn-sm border">Obriši</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+
+        <!-- Mobilni prikaz (kartice) -->
+        <div class="d-lg-none">
+            <div class="row row-cols-1 g-3">
+                <div class="col" th:each="record : ${records}">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">ID: <span th:text="${record.id}"></span></h5>
+                            <p class="card-text">Datum: <span th:text="${record.datum}"></span></p>
+                            <p class="card-text">Sistolički tlak: <span th:text="${record.sistolickiTlak}"></span></p>
+                            <p class="card-text">Dijastolički tlak: <span th:text="${record.dijastolickiTlak}"></span></p>
+                            <p class="card-text">Otkucaji srca: <span th:text="${record.otkucajiSrca}"></span></p>
+                            <p class="card-text">Opis: <span th:text="${record.opis}"></span></p>
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/editRecord(id=${record.id})}" class="btn btn-primary btn-sm">Uredi</a>
+                                <form th:action="@{/deleteRecord}" method="post" style="display:inline;" onsubmit="return confirm('Jeste li sigurni da želite obrisati ovaj zapis?');">
+                                    <input type="hidden" name="id" th:value="${record.id}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Obriši</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop prikaz (tablica) -->
+        <div class="d-none d-lg-block">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Datum</th>
+                    <th>Sistolički tlak</th>
+                    <th>Dijastolički tlak</th>
+                    <th>Otkucaji srca</th>
+                    <th>Opis</th>
+                    <th>Akcije</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="record : ${records}">
+                    <td th:text="${record.id}"></td>
+                    <td th:text="${record.datum}"></td>
+                    <td th:text="${record.sistolickiTlak}"></td>
+                    <td th:text="${record.dijastolickiTlak}"></td>
+                    <td th:text="${record.otkucajiSrca}"></td>
+                    <td th:text="${record.opis}"></td>
+                    <td>
+                        <a th:href="@{/editRecord(id=${record.id})}" class="btn btn-secondary btn-sm">Uredi</a>
+                        <form th:action="@{/deleteRecord}" method="post" style="display:inline;" onsubmit="return confirm('Jeste li sigurni da želite obrisati ovaj zapis?');">
+                            <input type="hidden" name="id" th:value="${record.id}">
+                            <button type="submit" class="btn btn-light btn-sm border">Obriši</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
 <!-- Footer -->
-<footer class="bg-dark text-white text-center py-3 mt-auto">
-    <p class="mb-0">&copy; 2024 TELEMED. Sva prava pridržana.</p>
-</footer>
+    <footer class="bg-dark text-white text-center py-3 fixed-bottom w-100">
+        <p class="mb-0">&copy; 2024 TELEMED. Sva prava pridržana.</p>
+    </footer>
+
 </body>
 </html>

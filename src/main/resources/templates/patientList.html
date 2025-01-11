@@ -11,7 +11,7 @@
 <!-- Navbar for Mobile -->
 <nav class="navbar navbar-light bg-light d-lg-none mb-4">
   <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="#sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand text-danger fw-bold d-flex align-items-center" href="#">
@@ -69,33 +69,41 @@
     <div class="d-none d-lg-block table-responsive">
       <table class="table table-striped table-bordered">
         <thead>
-        <tbody>
-      <tr>
-        <th>Ime i Prezime</th>
-        <th>Zadnje stanje</th>
-        <th>Opis</th>
-        </tbody>
-
+        <tr>
+          <th>Ime i Prezime</th>
+          <th>Zadnje stanje</th>
+          <th>Opis</th>
+          <th class="text-nowrap">Akcija</th>
+        </tr>
         </thead>
         <tbody id="patientTable">
         <tr th:each="patient : ${patients}">
           <td th:text="${patient.ime} + ' ' + ${patient.prezime}">Ime i Prezime</td>
           <td>
-      <span th:if="${patient.lastRecord != null}"
-            th:text="${patient.lastRecord.sistolickiTlak + '/' + patient.lastRecord.dijastolickiTlak + ' (' + patient.lastRecord.otkucajiSrca + ' otkucaja)'}"></span>
+              <span th:if="${patient.lastRecord != null}"
+                    th:text="${patient.lastRecord.sistolickiTlak + '/' + patient.lastRecord.dijastolickiTlak + ' (' + patient.lastRecord.otkucajiSrca + ' otkucaja)'}"></span>
             <span th:if="${patient.lastRecord == null}">Nema podataka</span>
           </td>
           <td>
             <span th:if="${patient.lastRecord != null}" th:text="${patient.lastRecord.opis}"></span>
             <span th:if="${patient.lastRecord == null}">Nema opisa</span>
           </td>
-          <td>
-            <a th:href="@{/patientRecords(patientId=${patient.id})}" class="btn btn-primary">Prikaži</a>
+          <td class="text-nowrap">
+            <div th:if="${patient.userTypeId == 2}" class="d-inline-flex">
+              <!-- Gumb za Prikaz -->
+              <a th:href="@{/patientRecords(patientId=${patient.id})}" class="btn btn-primary">Prikaži</a>
+
+              <!-- Gumb za Poveži, vidljiv ako pacijent nije povezan ili nije povezan s trenutnim doktorom -->
+              <form th:if="${patient.doctorId == null || patient.doctorId != currentDoctorId}"
+                    th:action="@{/assignPatientToDoctor}" method="post" class="ms-2">
+                <input type="hidden" name="patientId" th:value="${patient.id}">
+                <button type="submit" class="btn btn-success">Poveži</button>
+              </form>
+            </div>
           </td>
+
         </tr>
         </tbody>
-
-
       </table>
     </div>
 
@@ -113,15 +121,24 @@
             <span th:if="${patient.lastRecord != null}" th:text="${patient.lastRecord.opis}"></span>
             <span th:if="${patient.lastRecord == null}">Nema opisa</span>
           </p>
-          <a th:href="@{/patientRecords(patientId=${patient.id})}" class="btn btn-primary">Prikaži</a>
+          <div class="d-flex mt-3">
+            <!-- Gumb za Prikaz -->
+            <a th:href="@{/patientRecords(patientId=${patient.id})}" class="btn btn-primary">Prikaži</a>
+
+            <!-- Gumb za Poveži, vidljiv ako pacijent nije povezan ili nije povezan s trenutnim doktorom -->
+            <form th:if="${patient.doctorId == null || patient.doctorId != currentDoctorId}"
+                  th:action="@{/assignPatientToDoctor}" method="post" class="ms-2">
+              <input type="hidden" name="patientId" th:value="${patient.id}">
+              <button type="submit" class="btn btn-success">Poveži</button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
 
 
     <!-- Dinamički sadržaj -->
-    </div>
   </div>
+</div>
 </div>
 
 <footer class="bg-dark text-white text-center py-3 mt-auto">

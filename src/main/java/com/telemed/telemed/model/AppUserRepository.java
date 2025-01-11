@@ -1,4 +1,4 @@
-package com.telemed.telemed.controller.model;
+package com.telemed.telemed.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

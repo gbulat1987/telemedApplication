@@ -1,9 +1,9 @@
 // DoctorController.java
-package com.telemed.telemed.controller.controller;
+package com.telemed.telemed.controller;
 
-import com.telemed.telemed.controller.model.AppUser;
-import com.telemed.telemed.controller.model.PatientRecord;
-import com.telemed.telemed.controller.model.PatientService;
+import com.telemed.telemed.model.AppUser;
+import com.telemed.telemed.model.PatientRecord;
+import com.telemed.telemed.model.PatientService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,19 +27,20 @@ public class DoctorController {
             return "redirect:/login";
         }
 
-        Long doctorId = Long.valueOf(doctor.getId());
-        List<AppUser> patients = patientService.getPatientsByDoctorId(doctorId);
+        // Dohvati pacijente pod trenutnim doktorom i one bez doktora
+        List<AppUser> patients = patientService.getPatientsForDoctor(doctor.getId());
 
-        // Dodavanje zadnjeg zapisa svakom pacijentu
+        // Dodaj zadnji zapis za svakog pacijenta
         for (AppUser patient : patients) {
             PatientRecord lastRecord = patientService.getLastRecordByUserId(patient.getId().longValue());
-
             patient.setLastRecord(lastRecord);
         }
 
         model.addAttribute("patients", patients);
+        model.addAttribute("currentDoctorId", doctor.getId()); // Dodaj ID trenutnog doktora
         return "patientList";
     }
+
 
 
     @PostMapping("/addPatient")
@@ -74,6 +75,22 @@ public class DoctorController {
     public String showAddPatientForm() {
         return "addPatient";
     }
+    @PostMapping("/assignPatientToDoctor")
+    public String assignPatientToDoctor(@RequestParam Long patientId, HttpSession session) {
+        AppUser doctor = (AppUser) session.getAttribute("user");
+        if (doctor == null || !doctor.isDoctor()) {
+            return "redirect:/login"; // Preusmjeri ako korisnik nije doktor
+        }
+
+        AppUser patient = patientService.getUserById(patientId);
+        if (patient != null && patient.isPatient()) {
+            patient.setDoctorId(doctor.getId()); // Poveži pacijenta s doktorom
+            patientService.addUser(patient); // Ažuriraj pacijenta
+        }
+
+        return "redirect:/patientList"; // Vrati na listu pacijenata
+    }
+
 
 }
 

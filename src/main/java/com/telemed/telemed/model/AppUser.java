@@ -1,4 +1,4 @@
-package com.telemed.telemed.controller.model;
+package com.telemed.telemed.model;
 
 import jakarta.persistence.*;
 
@@ -82,8 +82,9 @@ public class AppUser {
     }
 
     public Integer getDoctorId() {
-        return Math.toIntExact(doctorId);
+        return doctorId == null ? null : Math.toIntExact(doctorId);
     }
+
 
     public void setIme(String ime) {
         this.ime = ime;

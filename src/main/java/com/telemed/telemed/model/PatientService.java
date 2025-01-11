@@ -1,4 +1,4 @@
-package com.telemed.telemed.controller.model;
+package com.telemed.telemed.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,4 +56,19 @@ public class PatientService {
         return appUserRepository.findById(patientId).orElse(null);
 
     }
+    public List<AppUser> getAllUsers() {
+        return appUserRepository.findAll(); // Dohvaća sve korisnike iz baze
+    }
+    public List<AppUser> getPatientsForDoctor(Long doctorId) {
+        // Dohvati pacijente koji su pod trenutnim doktorom
+        List<AppUser> patientsUnderDoctor = appUserRepository.findByDoctorId(doctorId);
+
+        // Dohvati pacijente koji nemaju doktora (doctorId = NULL)
+        List<AppUser> patientsWithoutDoctor = appUserRepository.findByDoctorId(null);
+
+        // Spoji obje liste
+        patientsUnderDoctor.addAll(patientsWithoutDoctor);
+        return patientsUnderDoctor;
+    }
+
 }

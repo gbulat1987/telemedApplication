@@ -1,9 +1,9 @@
 // PatientController.java
-package com.telemed.telemed.controller.controller;
+package com.telemed.telemed.controller;
 
-import com.telemed.telemed.controller.model.AppUser;
-import com.telemed.telemed.controller.model.PatientRecord;
-import com.telemed.telemed.controller.model.PatientService;
+import com.telemed.telemed.model.AppUser;
+import com.telemed.telemed.model.PatientRecord;
+import com.telemed.telemed.model.PatientService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,7 +50,6 @@ public class PatientController {
                 throw new IllegalArgumentException("Vrijednosti moraju biti pozitivne!");
             }
 
-            // Formatiranje datuma
             String datum = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
 
             // Kreiranje novog zapisa
