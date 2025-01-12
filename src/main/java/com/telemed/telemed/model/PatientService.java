@@ -3,6 +3,7 @@ package com.telemed.telemed.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -60,15 +61,32 @@ public class PatientService {
         return appUserRepository.findAll(); // Dohvaća sve korisnike iz baze
     }
     public List<AppUser> getPatientsForDoctor(Long doctorId) {
-        // Dohvati pacijente koji su pod trenutnim doktorom
-        List<AppUser> patientsUnderDoctor = appUserRepository.findByDoctorId(doctorId);
+        // Kreiraj novu listu koja će biti promjenjiva
+        List<AppUser> patients = new ArrayList<>();
+
+        // Dohvati pacijente pod trenutnim doktorom
+        List<AppUser> patientsUnderDoctor = appUserRepository.findByDoctorId(doctorId)
+                .stream()
+                .filter(user -> user.getUserTypeId() == 2) // Filtriraj samo pacijente
+                .toList();
 
         // Dohvati pacijente koji nemaju doktora (doctorId = NULL)
-        List<AppUser> patientsWithoutDoctor = appUserRepository.findByDoctorId(null);
+        List<AppUser> patientsWithoutDoctor = appUserRepository.findByDoctorId(null)
+                .stream()
+                .filter(user -> user.getUserTypeId() == 2) // Filtriraj samo pacijente
+                .toList();
 
-        // Spoji obje liste
-        patientsUnderDoctor.addAll(patientsWithoutDoctor);
-        return patientsUnderDoctor;
+        // Dodaj obje liste u mutable kolekciju
+        patients.addAll(patientsUnderDoctor);
+        patients.addAll(patientsWithoutDoctor);
+
+        return patients;
     }
-
+    public boolean deleteUser(Long userId) {
+        if (appUserRepository.existsById(userId)) {
+            appUserRepository.deleteById(userId);
+            return true;
+        }
+        return false;
+    }
 }

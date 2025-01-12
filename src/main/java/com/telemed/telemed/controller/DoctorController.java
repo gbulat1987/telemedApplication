@@ -27,19 +27,18 @@ public class DoctorController {
             return "redirect:/login";
         }
 
-        // Dohvati pacijente pod trenutnim doktorom i one bez doktora
         List<AppUser> patients = patientService.getPatientsForDoctor(doctor.getId());
 
-        // Dodaj zadnji zapis za svakog pacijenta
         for (AppUser patient : patients) {
-            PatientRecord lastRecord = patientService.getLastRecordByUserId(patient.getId().longValue());
+            PatientRecord lastRecord = patientService.getLastRecordByUserId(patient.getId());
             patient.setLastRecord(lastRecord);
         }
 
         model.addAttribute("patients", patients);
-        model.addAttribute("currentDoctorId", doctor.getId()); // Dodaj ID trenutnog doktora
+        model.addAttribute("currentDoctorId", doctor.getId());
         return "patientList";
     }
+
 
 
 
@@ -90,7 +89,38 @@ public class DoctorController {
 
         return "redirect:/patientList"; // Vrati na listu pacijenata
     }
+    @GetMapping("/patientListEdit")
+    public String showEditPatientForm(@RequestParam Long patientId, Model model) {
+        AppUser patient = patientService.getUserById(patientId);
+        model.addAttribute("patient", patient);
+        return "patientListEdit";
+    }
 
+    @PostMapping("/updatePatient")
+    public String updatePatient(@RequestParam Long id,
+                                @RequestParam String ime,
+                                @RequestParam String prezime,
+                                @RequestParam String email,
+                                @RequestParam String telefon,
+                                @RequestParam String adresa,
+                                @RequestParam String grad) {
+        AppUser patient = patientService.getUserById(id);
+        if (patient != null) {
+            patient.setIme(ime);
+            patient.setPrezime(prezime);
+            patient.setEmail(email);
+            patient.setTelefon(telefon);
+            patient.setAdresa(adresa);
+            patient.setGrad(grad);
+            patientService.addUser(patient);
+        }
+        return "redirect:/patientList";
+    }
+    @PostMapping("/deletePatient")
+    public String deletePatient(@RequestParam Long patientId) {
+        patientService.deleteUser(patientId);
+        return "redirect:/patientList";
+    }
 
 }
 
